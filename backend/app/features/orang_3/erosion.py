@@ -21,7 +21,7 @@ class ErosionOperation(BaseImageOperation):
     id = "morphology_erosion"
     name = "Erosi (Erosion)"
     category = "Operasi Morfologi dan Geometri"
-    owner = "Orang 3"
+    owner = "Modul 3"
     description = "Mengikis atau memperkecil area foreground objek berdasarkan elemen penstruktur (structuring element)."
     status = OperationStatus.READY
     has_kernel_preview = True

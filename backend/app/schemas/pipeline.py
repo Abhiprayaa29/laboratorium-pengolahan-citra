@@ -1,6 +1,6 @@
 """Pydantic schemas for Pipeline execution, steps, and intermediate responses."""
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 from pydantic import BaseModel, Field
 from app.schemas.histogram import HistogramData, ImageStats
 
@@ -29,7 +29,7 @@ class StepExecutionResult(BaseModel):
     image_base64: Optional[str] = None
     histogram: Optional[HistogramData] = None
     stats: Optional[ImageStats] = None
-    kernel_preview: Optional[List[List[int]]] = None
+    kernel_preview: Optional[List[List[Union[int, float]]]] = None
     note: Optional[str] = None
 
 

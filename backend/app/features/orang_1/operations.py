@@ -1,9 +1,9 @@
 """Modul 1: Transformasi Warna dan Intensitas
-Penanggung Jawab: Orang 1
-Status: Dalam Pengembangan (Template Integrasi Anggota)
+Status: Terintegrasi & Aktif (Production Ready)
 """
 
 from typing import Any, Dict
+import cv2
 import numpy as np
 
 from app.core.registry.base import BaseImageOperation
@@ -20,9 +20,9 @@ class GrayscaleOperation(BaseImageOperation):
     id = "intensity_grayscale"
     name = "Grayscale (Keabuan)"
     category = "Transformasi Warna dan Intensitas"
-    owner = "Orang 1"
+    owner = "Modul 1"
     description = "Mengonversi citra berwarna RGB menjadi citra monokromatik menggunakan formula luminansi standar."
-    status = OperationStatus.IN_DEVELOPMENT
+    status = OperationStatus.READY
 
     default_config = {"method": "luminance"}
     config_schema = [
@@ -51,16 +51,30 @@ class GrayscaleOperation(BaseImageOperation):
     )
 
     def process(self, image: np.ndarray, config: Dict[str, Any]) -> np.ndarray:
-        raise NotImplementedError("Operasi Grayscale sedang dalam pengembangan oleh Orang 1.")
+        method = config.get("method", "luminance")
+        if len(image.shape) == 2:
+            gray = image
+        else:
+            r = image[:, :, 0].astype(np.float32)
+            g = image[:, :, 1].astype(np.float32)
+            b = image[:, :, 2].astype(np.float32)
+            if method == "average":
+                gray = (r + g + b) / 3.0
+            else:
+                gray = 0.299 * r + 0.587 * g + 0.114 * b
+            gray = np.clip(gray, 0, 255).astype(np.uint8)
+
+        # Kembalikan sebagai 3-channel RGB representasi monokromatik untuk chaining pipeline
+        return np.stack([gray, gray, gray], axis=2)
 
 
 class NegativeOperation(BaseImageOperation):
     id = "intensity_negative"
     name = "Citra Negatif (Negative)"
     category = "Transformasi Warna dan Intensitas"
-    owner = "Orang 1"
+    owner = "Modul 1"
     description = "Membalikkan nilai intensitas piksel citra sehingga warna terang menjadi gelap dan sebaliknya."
-    status = OperationStatus.IN_DEVELOPMENT
+    status = OperationStatus.READY
 
     default_config = {}
     config_schema = []
@@ -77,16 +91,16 @@ class NegativeOperation(BaseImageOperation):
     )
 
     def process(self, image: np.ndarray, config: Dict[str, Any]) -> np.ndarray:
-        raise NotImplementedError("Operasi Negative sedang dalam pengembangan oleh Orang 1.")
+        return (255 - image).astype(np.uint8)
 
 
 class SepiaOperation(BaseImageOperation):
     id = "intensity_sepia"
     name = "Efek Sepia (Sepia Tone)"
     category = "Transformasi Warna dan Intensitas"
-    owner = "Orang 1"
+    owner = "Modul 1"
     description = "Memberikan nuansa warna cokelat hangat bergaya vintage fotografi klasik melalui transformasi matriks."
-    status = OperationStatus.IN_DEVELOPMENT
+    status = OperationStatus.READY
 
     default_config = {"intensity": 1.0}
     config_schema = [
@@ -116,16 +130,37 @@ class SepiaOperation(BaseImageOperation):
     )
 
     def process(self, image: np.ndarray, config: Dict[str, Any]) -> np.ndarray:
-        raise NotImplementedError("Operasi Sepia sedang dalam pengembangan oleh Orang 1.")
+        intensity = float(config.get("intensity", 1.0))
+        if len(image.shape) == 2:
+            rgb = np.stack([image, image, image], axis=2)
+        else:
+            rgb = image
+
+        r = rgb[:, :, 0].astype(np.float32)
+        g = rgb[:, :, 1].astype(np.float32)
+        b = rgb[:, :, 2].astype(np.float32)
+
+        tr = 0.393 * r + 0.769 * g + 0.189 * b
+        tg = 0.349 * r + 0.686 * g + 0.168 * b
+        tb = 0.272 * r + 0.534 * g + 0.131 * b
+
+        sepia = np.stack(
+            [np.clip(tr, 0, 255), np.clip(tg, 0, 255), np.clip(tb, 0, 255)],
+            axis=2,
+        ).astype(np.uint8)
+
+        if intensity < 1.0:
+            return cv2.addWeighted(sepia, intensity, rgb, 1.0 - intensity, 0)
+        return sepia
 
 
 class BrightnessOperation(BaseImageOperation):
     id = "intensity_brightness"
     name = "Kecerahan (Brightness Adjustment)"
     category = "Transformasi Warna dan Intensitas"
-    owner = "Orang 1"
+    owner = "Modul 1"
     description = "Menggeser nilai kecerahan citra secara aditif dengan pembatasan clipping rentang [0, 255]."
-    status = OperationStatus.IN_DEVELOPMENT
+    status = OperationStatus.READY
 
     default_config = {"beta": 30}
     config_schema = [
@@ -153,4 +188,6 @@ class BrightnessOperation(BaseImageOperation):
     )
 
     def process(self, image: np.ndarray, config: Dict[str, Any]) -> np.ndarray:
-        raise NotImplementedError("Operasi Brightness sedang dalam pengembangan oleh Orang 1.")
+        beta = int(config.get("beta", 30))
+        bright = image.astype(np.int32) + beta
+        return np.clip(bright, 0, 255).astype(np.uint8)

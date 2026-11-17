@@ -1,9 +1,9 @@
 """Modul 4: Segmentasi, Histogram, dan Deteksi Tepi
-Penanggung Jawab: Orang 4
-Status: Dalam Pengembangan (Template Integrasi Anggota)
+Status: Terintegrasi & Aktif (Production Ready)
 """
 
-from typing import Any, Dict
+from typing import Any, Dict, List, Optional, Union
+import cv2
 import numpy as np
 
 from app.core.registry.base import BaseImageOperation
@@ -20,9 +20,9 @@ class ThresholdingOperation(BaseImageOperation):
     id = "segmentation_threshold"
     name = "Penambangan Citra (Thresholding)"
     category = "Segmentasi, Histogram, dan Deteksi Tepi"
-    owner = "Orang 4"
+    owner = "Modul 4"
     description = "Mengubah citra grayscale menjadi biner murni (0 atau 255) berdasarkan nilai ambang batas."
-    status = OperationStatus.IN_DEVELOPMENT
+    status = OperationStatus.READY
 
     default_config = {"thresh": 128, "type": "binary"}
     config_schema = [
@@ -64,16 +64,32 @@ class ThresholdingOperation(BaseImageOperation):
     )
 
     def process(self, image: np.ndarray, config: Dict[str, Any]) -> np.ndarray:
-        raise NotImplementedError("Operasi Thresholding sedang dalam pengembangan oleh Orang 4.")
+        if len(image.shape) == 3:
+            gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+        else:
+            gray = image
+
+        thresh_val = int(config.get("thresh", 128))
+        thresh_type_str = config.get("type", "binary")
+
+        if thresh_type_str == "binary_inv":
+            cv_flag = cv2.THRESH_BINARY_INV
+        elif thresh_type_str == "trunc":
+            cv_flag = cv2.THRESH_TRUNC
+        else:
+            cv_flag = cv2.THRESH_BINARY
+
+        _, thresh_out = cv2.threshold(gray, thresh_val, 255, cv_flag)
+        return np.stack([thresh_out, thresh_out, thresh_out], axis=2)
 
 
 class EqualizationOperation(BaseImageOperation):
     id = "histogram_equalization"
     name = "Ekualisasi Histogram (Histogram Equalization)"
     category = "Segmentasi, Histogram, dan Deteksi Tepi"
-    owner = "Orang 4"
+    owner = "Modul 4"
     description = "Meratakan distribusi intensitas piksel secara nonlinier menggunakan CDF untuk meningkatkan kontras global."
-    status = OperationStatus.IN_DEVELOPMENT
+    status = OperationStatus.READY
 
     default_config = {}
     config_schema = []
@@ -92,18 +108,26 @@ class EqualizationOperation(BaseImageOperation):
     )
 
     def process(self, image: np.ndarray, config: Dict[str, Any]) -> np.ndarray:
-        raise NotImplementedError("Operasi Equalization sedang dalam pengembangan oleh Orang 4.")
+        if len(image.shape) == 2:
+            equalized = cv2.equalizeHist(image)
+            return np.stack([equalized, equalized, equalized], axis=2)
+
+        # Citra warna RGB: konversi ke YCrCb, ekualisasi channel Y (Luminansi), lalu konversi kembali ke RGB
+        ycrcb = cv2.cvtColor(image, cv2.COLOR_RGB2YCrCb)
+        ycrcb[:, :, 0] = cv2.equalizeHist(ycrcb[:, :, 0])
+        return cv2.cvtColor(ycrcb, cv2.COLOR_YCrCb2RGB)
 
 
 class EdgeDetectionOperation(BaseImageOperation):
     id = "edge_detection_sobel"
     name = "Deteksi Tepi Sobel (Sobel Edge Detection)"
     category = "Segmentasi, Histogram, dan Deteksi Tepi"
-    owner = "Orang 4"
+    owner = "Modul 4"
     description = "Mendeteksi diskontinuitas batas kontur objek menggunakan operator turunan gradien Sobel horizontal dan vertikal."
-    status = OperationStatus.IN_DEVELOPMENT
+    status = OperationStatus.READY
+    has_kernel_preview = True
 
-    default_config = {"kernel_size": 3}
+    default_config = {"kernel_size": 3, "thresh": 100}
     config_schema = [
         ParameterSchema(
             name="kernel_size",
@@ -115,7 +139,17 @@ class EdgeDetectionOperation(BaseImageOperation):
                 ParameterOption(label="5 × 5", value=5),
             ],
             description="Dimensi operator aproksimasi gradien spasial.",
-        )
+        ),
+        ParameterSchema(
+            name="thresh",
+            label="Ambang Magnitudo Tepi",
+            type=ParameterType.SLIDER,
+            default=100,
+            min_value=0,
+            max_value=255,
+            step=5,
+            description="Batas minimum kekuatan gradien agar dianggap sebagai garis tepi (0 = gradien lembut berskala penuh).",
+        ),
     ]
     explanation = AcademicExplanation(
         pengertian="Operator diferensial orde pertama untuk mendeteksi tepi tajam pada arah horizontal dan vertikal.",
@@ -124,12 +158,41 @@ class EdgeDetectionOperation(BaseImageOperation):
         rumus_matematis=(
             r"""G = \sqrt{G_x^2 + G_y^2}, \quad G_x = \begin{bmatrix} -1 & 0 & 1 \\ -2 & 0 & 2 \\ -1 & 0 & 1 \end{bmatrix} * I"""
         ),
-        parameter_info="Kernel 3x3 memberikan deteksi tepi tajam lokal; kernel 5x5 lebih toleran terhadap noise.",
+        parameter_info="Kernel 3x3 memberikan deteksi tepi tajam lokal; nilai thresh memfilter tepi halus.",
         pengaruh_gambar="Area datar menjadi hitam legam; garis batas kontur objek bersinar terang putih.",
         pengaruh_histogram="Histogram didominasi piksel gelap mendekati 0 dengan ekor panjang piksel terang di nilai tepi tinggi.",
         contoh_penerapan="Deteksi lajur jalan kendaraan otonom, pengukuran dimensi benda industri, dan face recognition.",
         mengapa_seperti_ini="Derivatif spasial menghasilkan nilai besar hanya ketika terjadi lonjakan intensitas mendadak antara dua piksel berdekatan.",
     )
 
+    def get_kernel_matrix(self, config: Dict[str, Any]) -> Optional[List[List[Union[int, float]]]]:
+        # Tampilkan kernel Sobel Horizontal 3x3 sebagai representasi visualizer
+        return [
+            [-1, 0, 1],
+            [-2, 0, 2],
+            [-1, 0, 1],
+        ]
+
     def process(self, image: np.ndarray, config: Dict[str, Any]) -> np.ndarray:
-        raise NotImplementedError("Operasi Edge Detection sedang dalam pengembangan oleh Orang 4.")
+        if len(image.shape) == 3:
+            gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+        else:
+            gray = image
+
+        ksize = int(config.get("kernel_size", 3))
+        if ksize not in (1, 3, 5, 7):
+            ksize = 3
+        thresh = int(config.get("thresh", 100))
+
+        gx = cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=ksize)
+        gy = cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=ksize)
+        magnitude = np.hypot(gx, gy)
+
+        if thresh > 0:
+            edges = np.zeros_like(gray, dtype=np.uint8)
+            edges[magnitude >= thresh] = 255
+        else:
+            max_val = np.max(magnitude)
+            edges = (magnitude / (max_val + 1e-5) * 255).astype(np.uint8)
+
+        return np.stack([edges, edges, edges], axis=2)

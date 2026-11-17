@@ -121,10 +121,40 @@ def test_pipeline_reordering_changes_result(test_canvas):
 
 def test_pipeline_handles_in_development_gracefully(test_canvas):
     """Operations in development should be gracefully reported without crashing."""
+    from app.core.registry.base import BaseImageOperation
+    from app.core.registry.registry import registry
+    from app.schemas.operation import AcademicExplanation, OperationStatus
+
+    class DummyInDevOp(BaseImageOperation):
+        id = "pipeline_test_dummy_indev"
+        name = "Pipeline Dummy In Dev"
+        category = "Testing"
+        owner = "Tester"
+        description = "Test op"
+        status = OperationStatus.IN_DEVELOPMENT
+        default_config = {}
+        config_schema = []
+        explanation = AcademicExplanation(
+            pengertian="Test",
+            tujuan="Test",
+            cara_kerja="Test",
+            rumus_matematis="T",
+            parameter_info="T",
+            pengaruh_gambar="T",
+            pengaruh_histogram="T",
+            contoh_penerapan="T",
+            mengapa_seperti_ini="T",
+        )
+
+        def process(self, image, config):
+            return image
+
+    registry.register(DummyInDevOp())
+
     steps = [
         PipelineStepConfig(
             step_id="step-1",
-            operation_id="intensity_grayscale",  # Orang 1: In Development
+            operation_id="pipeline_test_dummy_indev",
             enabled=True,
             config={},
         )

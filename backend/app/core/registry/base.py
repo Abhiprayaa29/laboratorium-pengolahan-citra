@@ -4,7 +4,7 @@ Every operation across all four member modules MUST inherit from or conform to t
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 import numpy as np
 
 from app.schemas.operation import (
@@ -43,7 +43,7 @@ class BaseImageOperation(ABC):
         """
         pass
 
-    def get_kernel_matrix(self, config: Dict[str, Any]) -> Optional[List[List[int]]]:
+    def get_kernel_matrix(self, config: Dict[str, Any]) -> Optional[List[List[Union[int, float]]]]:
         """Optional helper to return structuring element or convolution kernel for UI visualization."""
         return None
 

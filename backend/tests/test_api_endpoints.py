@@ -44,7 +44,7 @@ def test_get_operation_by_id():
     assert response.status_code == 200
     data = response.json()
     assert data["id"] == "morphology_erosion"
-    assert data["owner"] == "Orang 3"
+    assert data["owner"] == "Modul 3"
     assert data["explanation"]["rumus_matematis"] is not None
 
 
@@ -66,13 +66,63 @@ def test_execute_single_operation(sample_b64_image):
     assert data["histogram"]["grayscale"] is not None
 
 
-def test_execute_in_development_rejected_or_handled(sample_b64_image):
+def test_execute_ready_operations_all_modules(sample_b64_image):
     payload = {
         "image_base64": sample_b64_image,
         "config": {},
     }
-    # Orang 1 operation is in development
-    response = client.post("/api/v1/operations/intensity_grayscale/execute", json=payload)
+    # Test Modul 1 (Grayscale)
+    res_m1 = client.post("/api/v1/operations/intensity_grayscale/execute", json=payload)
+    assert res_m1.status_code == 200
+    assert res_m1.json()["operation_id"] == "intensity_grayscale"
+
+    # Test Modul 2 (Blur)
+    res_m2 = client.post("/api/v1/operations/filter_blur/execute", json=payload)
+    assert res_m2.status_code == 200
+    assert res_m2.json()["operation_id"] == "filter_blur"
+
+    # Test Modul 4 (Thresholding)
+    res_m4 = client.post("/api/v1/operations/segmentation_threshold/execute", json=payload)
+    assert res_m4.status_code == 200
+    assert res_m4.json()["operation_id"] == "segmentation_threshold"
+
+
+def test_execute_in_development_rejected_or_handled(sample_b64_image):
+    from app.core.registry.base import BaseImageOperation
+    from app.core.registry.registry import registry
+    from app.schemas.operation import AcademicExplanation, OperationStatus
+
+    class DummyInDevOp(BaseImageOperation):
+        id = "test_dummy_indev"
+        name = "Dummy In Dev"
+        category = "Testing"
+        owner = "Tester"
+        description = "Test op"
+        status = OperationStatus.IN_DEVELOPMENT
+        default_config = {}
+        config_schema = []
+        explanation = AcademicExplanation(
+            pengertian="Test",
+            tujuan="Test",
+            cara_kerja="Test",
+            rumus_matematis="T",
+            parameter_info="T",
+            pengaruh_gambar="T",
+            pengaruh_histogram="T",
+            contoh_penerapan="T",
+            mengapa_seperti_ini="T",
+        )
+
+        def process(self, image, config):
+            return image
+
+    registry.register(DummyInDevOp())
+
+    payload = {
+        "image_base64": sample_b64_image,
+        "config": {},
+    }
+    response = client.post("/api/v1/operations/test_dummy_indev/execute", json=payload)
     assert response.status_code == 400
     assert "Dalam Pengembangan" in response.json()["detail"]
 

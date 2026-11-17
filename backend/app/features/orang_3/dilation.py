@@ -21,7 +21,7 @@ class DilationOperation(BaseImageOperation):
     id = "morphology_dilation"
     name = "Dilasi (Dilation)"
     category = "Operasi Morfologi dan Geometri"
-    owner = "Orang 3"
+    owner = "Modul 3"
     description = "Memperbesar atau memperluas area foreground objek berdasarkan elemen penstruktur (structuring element)."
     status = OperationStatus.READY
     has_kernel_preview = True

@@ -21,7 +21,7 @@ class MirroringOperation(BaseImageOperation):
     id = "geometry_mirroring"
     name = "Pencerminan (Mirroring)"
     category = "Operasi Morfologi dan Geometri"
-    owner = "Orang 3"
+    owner = "Modul 3"
     description = "Membalikkan posisi spasial piksel citra secara horizontal, vertikal, atau kedua sumbu simetri."
     status = OperationStatus.READY
     has_kernel_preview = False

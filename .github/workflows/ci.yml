@@ -28,8 +28,10 @@ jobs:
 
       - name: Run Pytest Test Suite
         working-directory: ./backend
+        env:
+          PYTHONPATH: .
         run: |
-          pytest -v --tb=short
+          python -m pytest -v --tb=short
 
   frontend-build:
     name: Frontend TypeScript & Vite Production Build

@@ -23,33 +23,21 @@ const CATEGORIES = [
     id: 'Operasi Morfologi dan Geometri',
     name: 'Morfologi & Geometri',
     icon: Scissors,
-    member: 'Modul 3 (Orang 3) — Siap',
-    color: 'border-blue-500 text-blue-600',
-    highlight: true,
   },
   {
     id: 'Transformasi Warna dan Intensitas',
     name: 'Warna & Intensitas',
     icon: Layers,
-    member: 'Modul 1 (Orang 1)',
-    color: 'border-slate-300 text-slate-600',
-    highlight: false,
   },
   {
     id: 'Filter dan Efek Visual',
     name: 'Filter & Efek',
     icon: Sparkles,
-    member: 'Modul 2 (Orang 2)',
-    color: 'border-slate-300 text-slate-600',
-    highlight: false,
   },
   {
     id: 'Segmentasi, Histogram, dan Deteksi Tepi',
     name: 'Segmentasi & Tepi',
     icon: BarChart3,
-    member: 'Modul 4 (Orang 4)',
-    color: 'border-slate-300 text-slate-600',
-    highlight: false,
   },
 ];
 
@@ -67,21 +55,23 @@ export const OperationLibrary: React.FC<OperationLibraryProps> = ({
   );
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-xs flex flex-col h-full">
+    <div className="bg-white rounded-xl border border-slate-200 shadow-xs flex flex-col h-full overflow-hidden">
       {/* Panel Header */}
       <div className="px-4 py-3 border-b border-slate-200">
-        <h2 className="text-sm font-semibold text-slate-900 flex items-center justify-between">
-          <span>Katalog Operasi Citra</span>
-          <span className="text-xs font-normal text-slate-500">
-            {operations.length} Algoritma Terdaftar
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-semibold text-slate-900">
+            Katalog Operasi Citra
+          </h2>
+          <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-medium">
+            {operations.length} Operasi
           </span>
-        </h2>
+        </div>
         <p className="text-xs text-slate-500 mt-0.5">
-          Pilih algoritma pengolahan citra dari 4 modul kelompok untuk ditambahkan ke pipeline.
+          Pilih operasi pengolahan citra digital untuk ditambahkan ke pipeline pemrosesan.
         </p>
       </div>
 
-      {/* Category Tabs */}
+      {/* Category Tabs - Clean, without member labels */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 p-2 bg-slate-50/70 border-b border-slate-200">
         {CATEGORIES.map((cat) => {
           const Icon = cat.icon;
@@ -90,27 +80,24 @@ export const OperationLibrary: React.FC<OperationLibraryProps> = ({
             <button
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
-              className={`flex flex-col items-center justify-center py-2 px-2 rounded-lg text-xs font-medium transition-all ${
+              className={`flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-lg text-xs font-medium transition-all ${
                 isActive
                   ? 'bg-white text-blue-700 shadow-xs border border-blue-200 ring-1 ring-blue-500/20'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
               }`}
             >
-              <div className="flex items-center gap-1.5 mb-0.5">
-                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-blue-600' : 'text-slate-400'}`} />
-                <span className="truncate">{cat.name}</span>
-              </div>
-              <span className="text-[10px] text-slate-400 scale-95">{cat.member.split('—')[0]}</span>
+              <Icon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-blue-600' : 'text-slate-400'}`} />
+              <span className="truncate">{cat.name}</span>
             </button>
           );
         })}
       </div>
 
       {/* Operations List */}
-      <div className="p-3 overflow-y-auto space-y-2.5 flex-1 max-h-[380px]">
+      <div className="p-3 overflow-y-auto space-y-2.5 flex-1">
         {filteredOps.length === 0 ? (
           <div className="text-center py-8 text-xs text-slate-400">
-            Memuat daftar operasi dari backend registry...
+            Memuat daftar operasi dari backend...
           </div>
         ) : (
           filteredOps.map((op) => {
@@ -150,12 +137,11 @@ export const OperationLibrary: React.FC<OperationLibraryProps> = ({
                       {op.description}
                     </p>
 
-                    <div className="mt-2 flex items-center justify-between text-[11px] text-slate-400">
-                      <span>Penanggung Jawab: <strong className="text-slate-600">{op.owner}</strong></span>
-                      {op.has_kernel_preview && (
-                        <span className="text-blue-600 font-medium">Kernel 2D Visualizer</span>
-                      )}
-                    </div>
+                    {op.has_kernel_preview && (
+                      <div className="mt-2 text-[11px] text-blue-600 font-medium">
+                        ✓ Dilengkapi Visualisasi Matriks Kernel 2D
+                      </div>
+                    )}
                   </div>
 
                   {/* Actions */}
@@ -171,15 +157,15 @@ export const OperationLibrary: React.FC<OperationLibraryProps> = ({
                     <button
                       onClick={() => onAddOperation(op)}
                       disabled={!isReady}
-                      className={`flex items-center gap-1 px-2 py-1 rounded text-xs font-medium transition-all ${
+                      className={`flex items-center gap-1 px-2.5 py-1 rounded text-xs font-medium transition-all ${
                         isReady
-                          ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-xs'
+                          ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-xs active:scale-95'
                           : 'bg-slate-200 text-slate-400 cursor-not-allowed'
                       }`}
                       title={
                         isReady
                           ? 'Tambahkan operasi ke Pipeline'
-                          : 'Operasi ini belum dapat dijalankan (sedang dikerjakan oleh anggota kelompok)'
+                          : 'Operasi ini sedang dalam pengembangan'
                       }
                     >
                       {isReady ? (

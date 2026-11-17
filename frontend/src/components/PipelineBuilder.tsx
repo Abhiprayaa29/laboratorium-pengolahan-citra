@@ -122,17 +122,12 @@ const SortableStepItem: React.FC<SortableItemProps> = ({
         {index + 1}
       </div>
 
-      {/* Operation Title and Owner */}
+      {/* Operation Title */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5">
           <span className={`font-semibold truncate ${isEnabled ? 'text-slate-900' : 'text-slate-500 line-through'}`}>
             {opName}
           </span>
-          {operation && (
-            <span className="text-[10px] text-slate-400 shrink-0">
-              ({operation.owner})
-            </span>
-          )}
         </div>
 
         {/* Execution indicator */}
@@ -245,7 +240,7 @@ export const PipelineBuilder: React.FC<PipelineBuilderProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-xs flex flex-col h-full">
+    <div className="bg-white rounded-xl border border-slate-200 shadow-xs flex flex-col h-full overflow-hidden">
       {/* Header */}
       <div className="px-4 py-3 border-b border-slate-200 flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -269,7 +264,7 @@ export const PipelineBuilder: React.FC<PipelineBuilderProps> = ({
       </div>
 
       {/* Pipeline Steps List (Sortable) */}
-      <div className="p-3 overflow-y-auto space-y-2 flex-1 min-h-[220px] max-h-[380px]">
+      <div className="p-3 overflow-y-auto space-y-2 flex-1">
         {steps.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-center p-6 border-2 border-dashed border-slate-200 rounded-lg bg-slate-50/50">
             <Layers className="w-8 h-8 text-slate-300 mb-2" />

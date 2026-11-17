@@ -208,18 +208,18 @@ export const ImageWorkspace: React.FC<ImageWorkspaceProps> = ({
       <div
         onDragOver={(e) => e.preventDefault()}
         onDrop={handleDrop}
-        className="flex-1 min-h-[380px] bg-slate-900/5 relative flex items-center justify-center p-4 overflow-hidden select-none"
+        className="flex-1 min-h-[340px] bg-slate-900/5 relative flex items-center justify-center p-4 overflow-hidden select-none"
       >
         {!originalImageBase64 ? (
           /* Empty Upload Dropzone */
-          <div className="max-w-md w-full border-2 border-dashed border-slate-300 hover:border-blue-400 rounded-2xl p-8 bg-white/80 backdrop-blur-xs text-center transition-all shadow-sm">
-            <div className="w-14 h-14 mx-auto rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4 shadow-inner">
-              <Upload className="w-7 h-7" />
+          <div className="max-w-md w-full border-2 border-dashed border-slate-300 hover:border-blue-400 rounded-2xl p-5 bg-white/90 backdrop-blur-xs text-center transition-all shadow-xs">
+            <div className="w-11 h-11 mx-auto rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-2.5 shadow-inner">
+              <Upload className="w-5 h-5" />
             </div>
-            <h3 className="font-semibold text-sm text-slate-900 mb-1">
+            <h3 className="font-semibold text-sm text-slate-900 mb-0.5">
               Unggah Citra Pengolahan
             </h3>
-            <p className="text-xs text-slate-500 mb-4 max-w-xs mx-auto">
+            <p className="text-xs text-slate-500 mb-3 max-w-xs mx-auto">
               Seret dan lepaskan file citra di sini, atau pilih file dari komputer Anda (PNG, JPG, JPEG, WEBP).
             </p>
 
@@ -239,21 +239,21 @@ export const ImageWorkspace: React.FC<ImageWorkspaceProps> = ({
             </button>
 
             {/* Quick Sample Buttons */}
-            <div className="mt-6 pt-5 border-t border-slate-200">
+            <div className="mt-4 pt-3.5 border-t border-slate-200">
               <span className="text-[11px] text-slate-400 block mb-2">
                 Atau gunakan citra contoh praktikum:
               </span>
               <div className="flex items-center justify-center gap-2">
                 <button
                   onClick={() => onImageSelected(generateSampleBinaryImage())}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-medium transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-medium transition-colors shadow-2xs"
                 >
                   <Sparkles className="w-3 h-3 text-amber-500" />
                   <span>Citra Biner Morfologi (LPCD)</span>
                 </button>
                 <button
                   onClick={() => onImageSelected(generateSampleColorImage())}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-medium transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-medium transition-colors shadow-2xs"
                 >
                   <Sparkles className="w-3 h-3 text-blue-500" />
                   <span>Citra Warna RGB</span>

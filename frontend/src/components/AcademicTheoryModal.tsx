@@ -36,8 +36,8 @@ export const AcademicTheoryModal: React.FC<AcademicTheoryModalProps> = ({
             </div>
             <div>
               <h2 className="text-base font-bold text-slate-900">{operation.name}</h2>
-              <p className="text-xs text-slate-500">
-                {operation.category} • Penanggung Jawab: <span className="font-semibold text-slate-700">{operation.owner}</span>
+              <p className="text-xs text-slate-500 font-medium">
+                {operation.category}
               </p>
             </div>
           </div>

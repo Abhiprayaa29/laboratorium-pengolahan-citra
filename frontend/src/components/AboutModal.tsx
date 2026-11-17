@@ -2,7 +2,7 @@ import React from 'react';
 import {
   X,
   FlaskConical,
-  Users,
+  Layers,
   Code2,
   CheckCircle2,
   Clock,
@@ -28,7 +28,7 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
             <div>
               <h2 className="text-base font-bold text-slate-900">Tentang Laboratorium LPCD</h2>
               <p className="text-xs text-slate-500">
-                Laboratorium Pengolahan Citra Digital — Proyek Praktikum Mandiri
+                Laboratorium Pengolahan Citra Digital — Platform Akademik Terpadu
               </p>
             </div>
           </div>
@@ -47,27 +47,27 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
           <div>
             <h3 className="font-bold text-slate-900 text-xs mb-1">Tujuan & Filosofi Platform</h3>
             <p>
-              <strong>Laboratorium Pengolahan Citra Digital (LPCD)</strong> adalah platform web akademik yang dirancang secara modular untuk memfasilitasi praktikum pengolahan citra digital di perguruan tinggi. Seluruh algoritma citra dijalankan murni pada backend <strong>Python 3.13 dan OpenCV (opencv-python-headless)</strong>, menjamin hasil matematis yang akurat tanpa simulasi CSS.
+              <strong>Laboratorium Pengolahan Citra Digital (LPCD)</strong> adalah platform web akademik yang dirancang secara modular untuk memfasilitasi praktikum dan riset pengolahan citra digital di perguruan tinggi. Seluruh algoritma pengolahan citra dijalankan secara murni pada backend <strong>Python 3.13 dan OpenCV (`opencv-python-headless`)</strong>, menjamin hasil komputasi matematis yang akurat tanpa manipulasi tampilan semata.
             </p>
           </div>
 
-          {/* Pembagian Tugas Kelompok */}
+          {/* Cakupan Bidang Ilmu */}
           <div>
             <h3 className="font-bold text-slate-900 text-xs mb-2 flex items-center gap-1.5 text-blue-700">
-              <Users className="w-4 h-4" />
-              Pembagian Modul & Anggota Kelompok
+              <Layers className="w-4 h-4" />
+              Cakupan Kategori Pengolahan Citra
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              {/* Modul 3 (Selesai) */}
+              {/* Morfologi & Geometri (Selesai) */}
               <div className="p-3 rounded-lg border border-emerald-200 bg-emerald-50/40">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="font-bold text-slate-900">Modul 3 — Orang 3</span>
+                  <span className="font-bold text-slate-900">Morfologi & Transformasi Geometri</span>
                   <span className="text-[10px] font-semibold text-emerald-700 flex items-center gap-0.5">
                     <CheckCircle2 className="w-3 h-3" />
-                    Selesai & Teruji
+                    Siap Digunakan
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-500 mb-1">Morfologi & Transformasi Geometri</p>
+                <p className="text-[11px] text-slate-500 mb-1">Manipulasi bentuk objek & koordinat spasial</p>
                 <ul className="text-[10px] text-slate-700 list-disc list-inside space-y-0.5">
                   <li>Erosi (Erosion) — rect, ellipse, cross</li>
                   <li>Dilasi (Dilation) — rect, ellipse, cross</li>
@@ -75,42 +75,42 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
                 </ul>
               </div>
 
-              {/* Modul 1 */}
+              {/* Transformasi Warna */}
               <div className="p-3 rounded-lg border border-slate-200 bg-slate-50/60">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="font-bold text-slate-900">Modul 1 — Orang 1</span>
+                  <span className="font-bold text-slate-900">Transformasi Warna & Intensitas</span>
                   <span className="text-[10px] font-medium text-amber-700 flex items-center gap-0.5">
                     <Clock className="w-3 h-3" />
                     Dalam Pengembangan
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-500 mb-1">Transformasi Warna & Intensitas</p>
+                <p className="text-[11px] text-slate-500 mb-1">Manipulasi kanal dan spektrum warna</p>
                 <p className="text-[10px] text-slate-400">Grayscale, Negative, Sepia, Brightness</p>
               </div>
 
-              {/* Modul 2 */}
+              {/* Filter Spasial */}
               <div className="p-3 rounded-lg border border-slate-200 bg-slate-50/60">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="font-bold text-slate-900">Modul 2 — Orang 2</span>
+                  <span className="font-bold text-slate-900">Penyaringan Spasial & Efek Visual</span>
                   <span className="text-[10px] font-medium text-amber-700 flex items-center gap-0.5">
                     <Clock className="w-3 h-3" />
                     Dalam Pengembangan
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-500 mb-1">Filter Spasial & Efek Visual</p>
+                <p className="text-[11px] text-slate-500 mb-1">Konvolusi kernel frekuensi spasial</p>
                 <p className="text-[10px] text-slate-400">Gaussian Blur, Sharpening, Emboss, Sketch</p>
               </div>
 
-              {/* Modul 4 */}
+              {/* Segmentasi & Tepi */}
               <div className="p-3 rounded-lg border border-slate-200 bg-slate-50/60">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="font-bold text-slate-900">Modul 4 — Orang 4</span>
+                  <span className="font-bold text-slate-900">Segmentasi, Histogram & Deteksi Tepi</span>
                   <span className="text-[10px] font-medium text-amber-700 flex items-center gap-0.5">
                     <Clock className="w-3 h-3" />
                     Dalam Pengembangan
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-500 mb-1">Segmentasi & Deteksi Tepi</p>
+                <p className="text-[11px] text-slate-500 mb-1">Pemisahan objek & batas kontur</p>
                 <p className="text-[10px] text-slate-400">Thresholding, Equalization, Edge Detection</p>
               </div>
             </div>
@@ -135,7 +135,7 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
 
         {/* Footer */}
         <div className="px-6 py-3 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
-          <span className="text-[11px] text-slate-400">Lisensi Akademik Bebas • Dibuat untuk Praktikum Pengolahan Citra Digital</span>
+          <span className="text-[11px] text-slate-400">Lisensi Akademik Bebas • Laboratorium Pengolahan Citra Digital</span>
           <button
             onClick={onClose}
             className="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-xs font-semibold"

@@ -23,11 +23,13 @@ export const ParameterInspector: React.FC<ParameterInspectorProps> = ({
 }) => {
   if (!selectedStep || !operation) {
     return (
-      <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-6 flex flex-col items-center justify-center text-center h-full min-h-[300px]">
-        <Sliders className="w-8 h-8 text-slate-300 mb-2" />
-        <h3 className="text-xs font-semibold text-slate-700">Tidak Ada Tahap Terpilih</h3>
-        <p className="text-[11px] text-slate-400 mt-1 max-w-[200px]">
-          Klik salah satu tahap pada Pipeline Builder untuk menyesuaikan parameter dan mempelajari teorinya.
+      <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-6 flex flex-col items-center justify-center text-center h-full">
+        <div className="w-12 h-12 rounded-xl bg-slate-100 text-slate-400 flex items-center justify-center mb-3">
+          <Sliders className="w-6 h-6" />
+        </div>
+        <h3 className="text-xs font-semibold text-slate-800">Tidak Ada Tahap Terpilih</h3>
+        <p className="text-[11px] text-slate-400 mt-1 max-w-[240px] leading-relaxed">
+          Pilih salah satu tahap pada Pipeline Builder untuk menyesuaikan parameter operasi dan melihat penjelasan teorinya.
         </p>
       </div>
     );
@@ -65,7 +67,6 @@ export const ParameterInspector: React.FC<ParameterInspectorProps> = ({
         } else if (shape === 'cross') {
           val = r === radius || c === radius ? 1 : 0;
         } else if (shape === 'ellipse') {
-          // Normalized elliptical distance
           const dy = r - radius;
           const dx = c - radius;
           val = (dx * dx) / ((radius + 0.1) * (radius + 0.1)) + (dy * dy) / ((radius + 0.1) * (radius + 0.1)) <= 1.05 ? 1 : 0;
@@ -168,13 +169,13 @@ export const ParameterInspector: React.FC<ParameterInspectorProps> = ({
             <h2 className="text-sm font-semibold text-slate-900">{operation.name}</h2>
           </div>
           <span className="text-[11px] text-slate-500">
-            Penanggung Jawab: {operation.owner}
+            {operation.category}
           </span>
         </div>
 
         <button
           onClick={onOpenFullTheory}
-          className="flex items-center gap-1 px-2 py-1 text-[11px] font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors"
+          className="flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors"
           title="Baca seluruh teori akademik & rumus KaTeX"
         >
           <BookOpen className="w-3 h-3" />
@@ -183,7 +184,7 @@ export const ParameterInspector: React.FC<ParameterInspectorProps> = ({
       </div>
 
       {/* Content Form & Explanation */}
-      <div className="p-4 overflow-y-auto space-y-4 flex-1 max-h-[380px]">
+      <div className="p-4 overflow-y-auto space-y-4 flex-1">
         {/* Parameter Fields */}
         <div className="space-y-3">
           <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">
